@@ -17,7 +17,7 @@ html,
 body {
   background-color: var(--color-bioma-dark);
   color: var(--color-bioma-water);
-  overflow-x: hidden;
+  overflow-x: clip;
   font-family: var(--font-sans);
   margin: 0;
   padding: 0;

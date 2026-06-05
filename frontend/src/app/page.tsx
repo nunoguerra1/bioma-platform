@@ -2,50 +2,69 @@
 
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
 import { useState, useRef } from 'react';
+import Image from 'next/image';
 import Preloader from '@/components/Preloader';
+import Galeria from '@/components/Galeria';
+import Footer from '@/components/Footer';
 
 function Manifesto() {
   const containerRef = useRef<HTMLDivElement>(null);
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
-    offset: ["start end", "end start"]
+    offset: ["start 80%", "end start"]
   });
 
-  const yParallax = useTransform(scrollYProgress, [0, 1], [0, -100]);
-  const textOpacity = useTransform(scrollYProgress, [0, 0.3, 0.6], [0.2, 1, 0.2]);
+  const yParallax = useTransform(scrollYProgress, [0, 1], [0, -150]);
+
+  const phrase = "Casas respiram. Cidades sufocam. O Bioma nasce para restabelecer o cordão umbilical entre a arquitetura moderna e a inteligência silenciosa da natureza interna.";
+  const words = phrase.split(" ");
 
   return (
     <section
       ref={containerRef}
       className="min-h-screen w-full bg-bioma-dark flex flex-col justify-center px-8 md:px-16 py-32 relative z-20 border-t border-bioma-moss/30"
     >
-      <div className="max-w-4xl mx-auto w-full grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
+      <div className="max-w-6xl mx-auto w-full grid grid-cols-1 md:grid-cols-12 gap-16 items-center">
 
-        <div className="md:col-span-8">
-          <span className="text-xs tracking-[0.3em] uppercase text-bioma-leaf block mb-6 font-sans">
-            01 / O Manifesto
-          </span>
-          <motion.h2
-            style={{ opacity: textOpacity }}
-            className="font-title text-3xl md:text-5xl font-light leading-relaxed text-bioma-water tracking-wide"
-          >
-            Casas respiram. Cidades sufocam. O Bioma nasce para restabelecer o cordão umbilical entre a arquitetura moderna e a inteligência silenciosa da natureza interna.
-          </motion.h2>
+        <div className="md:col-span-7 flex flex-wrap gap-x-3 gap-y-2">
+          <div className="w-full mb-6">
+            <span className="text-xs tracking-[0.3em] uppercase text-bioma-leaf font-sans">
+              01 / O Manifesto
+            </span>
+          </div>
+          {words.map((word, i) => {
+            const start = i / words.length;
+            const end = start + (1 / words.length);
+            const opacity = useTransform(scrollYProgress, [start, end], [0.1, 1]);
+
+            return (
+              <motion.span
+                key={i}
+                style={{ opacity }}
+                className="font-title text-4xl md:text-5xl lg:text-6xl font-light leading-tight text-bioma-water tracking-wide"
+              >
+                {word}
+              </motion.span>
+            );
+          })}
         </div>
 
-        <motion.div
-          style={{ y: yParallax }}
-          className="md:col-span-4 w-full aspect-[3/4] bg-bioma-moss/20 rounded border border-bioma-moss/40 relative overflow-hidden flex items-center justify-center group"
-        >
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent to-bioma-dark/80 z-10" />
-          <div className="w-full h-[1px] bg-bioma-leaf/20 absolute top-1/4 left-0 group-hover:bg-bioma-leaf/50 transition-colors duration-500" />
-          <div className="w-[1px] h-full bg-bioma-leaf/20 absolute top-0 left-1/3 group-hover:bg-bioma-leaf/50 transition-colors duration-500" />
-
-          <span className="font-sans text-[10px] tracking-[0.4em] uppercase text-bioma-leaf/60 z-20">
-            [ design biofílico ]
-          </span>
-        </motion.div>
+        <div className="md:col-span-5 w-full relative h-[70vh] flex items-center justify-center overflow-hidden">
+          <div className="absolute inset-0 w-full h-full overflow-hidden rounded">
+            <motion.div
+              style={{ y: yParallax }}
+              className="absolute top-[-20%] left-[-10%] w-[120%] h-[140%]"
+            >
+              <Image
+                src="https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?q=80&w=1200&auto=format&fit=crop"
+                alt="Textura de folhas e natureza"
+                fill
+                className="object-cover opacity-80"
+              />
+            </motion.div>
+          </div>
+        </div>
 
       </div>
     </section>
@@ -194,7 +213,13 @@ export default function Home() {
           </footer>
         </main>
 
-        {!isLoading && <Manifesto />}
+        {!isLoading && (
+          <>
+            <Manifesto />
+            <Galeria />
+            <Footer />
+          </>
+        )}
       </div>
     </>
   );
