@@ -1,0 +1,7 @@
+cat <<EOT >> .gitignore
+node_modules/
+.env
+dist/
+.next/
+.DS_Store
+EOT
