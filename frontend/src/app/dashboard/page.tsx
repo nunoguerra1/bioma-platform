@@ -1,73 +1,185 @@
 'use client';
 
-import { motion, useMotionTemplate, useMotionValue } from 'framer-motion';
-import PlantCard3D from '@/components/PlantCard3D';
+import { motion, AnimatePresence, useScroll, useVelocity, useSpring, useTransform } from 'framer-motion';
+import { useState, useRef, useEffect } from 'react';
+import Link from 'next/link';
 
 const minhasPlantas = [
-    { id: 1, title: "Monstera Deliciosa", status: "Precisa de Rega", health: 45, image: "https://images.unsplash.com/photo-1592525413155-22445c55beea?q=80&w=600&auto=format&fit=crop" },
-    { id: 2, title: "Ficus Lyrata", status: "Saudável", health: 90, image: "https://images.unsplash.com/photo-1614594975525-e45190c55d40?q=80&w=600&auto=format&fit=crop" },
-    { id: 3, title: "Calathea Orbifolia", status: "Aclimatizar", health: 70, image: "https://images.unsplash.com/photo-1620127807580-55e100ec5a06?q=80&w=600&auto=format&fit=crop" },
+    { id: 1, title: "Monstera Deliciosa", status: "Regar Hoje", health: 45, image: "https://images.unsplash.com/photo-1592525413155-22445c55beea?q=80&w=1200&auto=format&fit=crop" },
+    { id: 2, title: "Ficus Lyrata", status: "Saudável", health: 90, image: "https://images.unsplash.com/photo-1614594975525-e45190c55d40?q=80&w=1200&auto=format&fit=crop" },
+    { id: 3, title: "Calathea", status: "Aclimatizar", health: 70, image: "https://images.unsplash.com/photo-1620127807580-55e100ec5a06?q=80&w=1200&auto=format&fit=crop" },
+    { id: 4, title: "Sansevieria", status: "Saudável", health: 98, image: "https://images.unsplash.com/photo-1611078810680-1cd17d699042?q=80&w=1200&auto=format&fit=crop" },
+    { id: 5, title: "Zamioculca", status: "Crescimento", health: 100, image: "https://images.unsplash.com/photo-1632207691143-643e2a9a9361?q=80&w=1200&auto=format&fit=crop" },
+    { id: 6, title: "Pilea Peperomioides", status: "Saudável", health: 85, image: "https://images.unsplash.com/photo-1597054942004-98ce4f526b77?q=80&w=1200&auto=format&fit=crop" },
 ];
 
 export default function Dashboard() {
-    const mouseX = useMotionValue(0);
-    const mouseY = useMotionValue(0);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [activeId, setActiveId] = useState<number>(minhasPlantas[0].id);
 
-    function handleMouseMove({ currentTarget, clientX, clientY }: React.MouseEvent) {
-        const { left, top } = currentTarget.getBoundingClientRect();
-        mouseX.set(clientX - left);
-        mouseY.set(clientY - top);
-    }
+    const activePlanta = minhasPlantas.find(p => p.id === activeId);
+
+    const carouselRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        const carousel = carouselRef.current;
+        if (!carousel) return;
+
+        const handleWheel = (e: WheelEvent) => {
+            if (e.deltaY !== 0) {
+                e.preventDefault();
+                carousel.scrollLeft += e.deltaY;
+            }
+        };
+
+        carousel.addEventListener('wheel', handleWheel, { passive: false });
+        return () => carousel.removeEventListener('wheel', handleWheel);
+    }, []);
+
+    const { scrollXProgress, scrollX } = useScroll({ container: carouselRef });
+    const scrollVelocity = useVelocity(scrollX);
+    const smoothVelocity = useSpring(scrollVelocity, { damping: 50, stiffness: 400 });
+    const skewX = useTransform(smoothVelocity, [-1000, 1000], [-8, 8]);
 
     return (
-        <main
-            onMouseMove={handleMouseMove}
-            className="relative min-h-screen bg-bioma-dark overflow-hidden flex flex-col items-center justify-center py-20 px-8"
-        >
+        <main className="relative min-h-screen bg-bioma-dark overflow-x-hidden flex flex-col items-center py-12">
 
-            <motion.div
-                className="pointer-events-none absolute inset-0 z-0"
-                style={{
-                    background: useMotionTemplate`
-            radial-gradient(
-              600px circle at ${mouseX}px ${mouseY}px,
-              rgba(163, 184, 153, 0.08),
-              transparent 80%
-            )
-          `,
-                }}
-            />
+            <AnimatePresence mode="wait">
+                <motion.div
+                    key={activeId}
+                    initial={{ opacity: 0, scale: 1.1 }}
+                    animate={{ opacity: 0.15, scale: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 1.5, ease: "easeInOut" }}
+                    className="fixed inset-0 z-0 bg-cover bg-center pointer-events-none"
+                    style={{
+                        backgroundImage: `url(${activePlanta?.image})`,
+                        filter: 'blur(30px) saturate(150%)'
+                    }}
+                />
+            </AnimatePresence>
+            <div className="fixed inset-0 bg-gradient-to-b from-bioma-dark/80 via-transparent to-bioma-dark/90 z-0 pointer-events-none" />
 
-            <div className="w-full max-w-6xl z-10 relative">
-                <header className="mb-16 flex flex-col md:flex-row justify-between items-end border-b border-bioma-moss/30 pb-8">
-                    <div>
-                        <span className="text-xs tracking-[0.3em] uppercase text-bioma-leaf font-sans">
-                            Ecossistema Pessoal
-                        </span>
-                        <h1 className="font-title text-4xl md:text-5xl text-bioma-water font-light mt-4">
-                            Bem-vindo, Nuno.
-                        </h1>
-                    </div>
-                    <div className="mt-8 md:mt-0 text-right">
-                        <span className="block text-xs uppercase tracking-[0.2em] text-bioma-water/50">
-                            Qualidade do Ar Interno
-                        </span>
-                        <span className="font-title text-2xl text-bioma-leaf">Excepcional</span>
-                    </div>
+            <Link
+                href="/"
+                className="fixed top-8 left-8 z-50 px-4 py-2 text-[10px] tracking-[0.2em] uppercase text-bioma-water/50 hover:text-bioma-leaf border border-transparent hover:border-bioma-leaf/30 rounded-full bg-bioma-dark/50 backdrop-blur-md transition-all duration-300"
+            >
+                ← Retornar
+            </Link>
+
+            <div className="w-full z-10 relative flex flex-col h-full mt-12 mb-20 px-8">
+                <header className="mb-12 flex flex-col md:flex-row justify-between items-end border-b border-bioma-moss/30 pb-6 max-w-7xl mx-auto w-full">
+                    <motion.div initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 1 }}>
+                        <span className="text-xs tracking-[0.3em] uppercase text-bioma-leaf font-sans">Ecossistema</span>
+                        <h1 className="font-title text-4xl md:text-5xl text-bioma-water font-light mt-2">Visão Geral.</h1>
+                    </motion.div>
+
+                    <motion.div initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 1, delay: 0.2 }}>
+                        <button
+                            onClick={() => setIsModalOpen(true)}
+                            className="px-6 py-3 bg-transparent border border-bioma-leaf/50 text-bioma-leaf text-[10px] uppercase font-bold tracking-[0.2em] hover:bg-bioma-leaf hover:text-bioma-dark transition-all duration-300 rounded"
+                        >
+                            + Adicionar Espécime
+                        </button>
+                    </motion.div>
                 </header>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 perspective-[1200px]">
-                    {minhasPlantas.map((planta) => (
-                        <PlantCard3D
-                            key={planta.id}
-                            title={planta.title}
-                            status={planta.status}
-                            health={planta.health}
-                            image={planta.image}
+                <motion.div
+                    initial={{ opacity: 0, y: 50 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 1, delay: 0.4 }}
+                    className="relative w-full"
+                >
+                    <div
+                        ref={carouselRef}
+                        className="flex flex-row items-center w-full h-[65vh] gap-6 overflow-x-auto px-4 pb-8 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
+                    >
+                        {minhasPlantas.map((planta) => {
+                            const isActive = activeId === planta.id;
+
+                            return (
+                                <motion.div
+                                    key={planta.id}
+                                    layout
+                                    onClick={() => setActiveId(planta.id)}
+                                    className={`relative h-full rounded-2xl overflow-hidden cursor-pointer flex flex-col justify-end shrink-0 transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] ${isActive ? 'w-[85vw] md:w-[700px] shadow-2xl shadow-black/80' : 'w-[45vw] md:w-[200px] hover:w-[220px]'
+                                        }`}
+                                >
+                                    <motion.div
+                                        style={{ skewX }}
+                                        className="absolute inset-0 w-full h-full origin-bottom"
+                                    >
+                                        <motion.div layout className="absolute inset-0 w-full h-full bg-bioma-dark">
+                                            <div
+                                                className="w-full h-full bg-cover bg-center transition-all duration-700"
+                                                style={{
+                                                    backgroundImage: `url(${planta.image})`,
+                                                    filter: isActive ? 'grayscale(0%) brightness(100%)' : 'grayscale(100%) brightness(40%)'
+                                                }}
+                                            />
+                                            <div className="absolute inset-0 bg-gradient-to-t from-bioma-dark/90 via-bioma-dark/20 to-transparent" />
+                                        </motion.div>
+
+                                        <div className="relative z-10 w-full h-full flex flex-col justify-end p-6">
+                                            {isActive ? (
+                                                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3, duration: 0.5 }} className="flex flex-col gap-4">
+                                                    <div className="flex items-center gap-4">
+                                                        <span className="px-3 py-1 bg-bioma-dark/50 backdrop-blur-md border border-bioma-moss/50 rounded-full text-[10px] uppercase tracking-widest text-bioma-leaf">{planta.status}</span>
+                                                        <span className="text-[10px] text-bioma-water/50 uppercase tracking-widest">ID: #00{planta.id}</span>
+                                                    </div>
+                                                    <h2 className="font-title text-4xl md:text-6xl text-bioma-water font-light whitespace-nowrap overflow-hidden text-ellipsis">{planta.title}</h2>
+
+                                                    <div className="w-full max-w-sm mt-4 p-4 bg-bioma-dark/60 backdrop-blur-xl border border-bioma-moss/30 rounded-xl">
+                                                        <div className="flex justify-between text-xs text-bioma-water/70 mb-2 font-sans tracking-wide">
+                                                            <span>Índice de Vitalidade</span>
+                                                            <span className="text-bioma-leaf">{planta.health}%</span>
+                                                        </div>
+                                                        <div className="w-full bg-bioma-dark h-1.5 rounded-full overflow-hidden">
+                                                            <motion.div initial={{ width: 0 }} animate={{ width: `${planta.health}%` }} transition={{ duration: 1, delay: 0.5 }} className="h-full bg-gradient-to-r from-bioma-moss to-bioma-leaf" />
+                                                        </div>
+                                                    </div>
+                                                </motion.div>
+                                            ) : (
+                                                <div className="w-full h-full flex items-end justify-center pb-8 opacity-50 hover:opacity-100 transition-opacity">
+                                                    <span className="font-title text-xl text-bioma-water tracking-widest whitespace-nowrap" style={{ writingMode: 'vertical-rl', transform: 'rotate(180deg)' }}>
+                                                        {planta.title}
+                                                    </span>
+                                                </div>
+                                            )}
+                                        </div>
+                                    </motion.div>
+                                </motion.div>
+                            );
+                        })}
+                    </div>
+
+                    <div className="absolute -bottom-8 left-4 right-4 h-[2px] bg-bioma-moss/20 rounded-full overflow-hidden max-w-7xl mx-auto">
+                        <motion.div
+                            className="h-full bg-bioma-leaf shadow-[0_0_10px_rgba(163,184,153,0.8)] origin-left"
+                            style={{ scaleX: scrollXProgress }}
                         />
-                    ))}
-                </div>
+                    </div>
+                </motion.div>
             </div>
+
+            <AnimatePresence>
+                {isModalOpen && (
+                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-bioma-dark/90 backdrop-blur-sm">
+                        <motion.div initial={{ scale: 0.95, y: 20, opacity: 0 }} animate={{ scale: 1, y: 0, opacity: 1 }} exit={{ scale: 0.95, y: 20, opacity: 0 }} className="w-full max-w-lg bg-bioma-dark/50 border border-bioma-leaf/20 rounded-2xl p-8 relative shadow-[0_0_50px_rgba(0,0,0,0.8)] backdrop-blur-xl">
+                            <button onClick={() => setIsModalOpen(false)} className="absolute top-6 right-6 text-bioma-water/50 hover:text-bioma-leaf text-xl transition-colors">✕</button>
+                            <span className="text-[10px] tracking-[0.3em] uppercase text-bioma-leaf mb-2 block">Catalogação</span>
+                            <h2 className="font-title text-3xl text-bioma-water font-light mb-8">Nova Planta</h2>
+                            <form className="flex flex-col gap-6" onSubmit={(e) => e.preventDefault()}>
+                                <div className="flex flex-col gap-2">
+                                    <label className="text-[10px] uppercase tracking-[0.2em] text-bioma-water/60">Nome da Espécie</label>
+                                    <input type="text" className="bg-transparent border-b border-bioma-moss/50 text-bioma-water p-2 focus:outline-none focus:border-bioma-leaf" placeholder="ex: Ficus Elastica" />
+                                </div>
+                                <button type="submit" className="mt-6 w-full py-4 bg-bioma-water text-bioma-dark uppercase tracking-[0.2em] text-xs font-bold hover:bg-bioma-leaf transition-colors rounded">Confirmar Inserção</button>
+                            </form>
+                        </motion.div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </main>
     );
 }
