@@ -6,6 +6,7 @@ import Image from 'next/image';
 import Preloader from '@/components/Preloader';
 import Galeria from '@/components/Galeria';
 import Footer from '@/components/Footer';
+import Link from 'next/link';
 
 function Manifesto() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -138,10 +139,17 @@ export default function Home() {
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.8, delay: 0.2 }}
-                  className="flex gap-8 text-xs tracking-[0.2em] uppercase font-sans text-bioma-water/70"
+                  className="flex gap-8 text-xs tracking-[0.2em] uppercase font-sans text-bioma-water/70 items-center"
                 >
-                  <a href="#galeria" className="hover:text-bioma-leaf transition-colors duration-300">Explorar</a>
-                  <a href="#curadoria" className="hover:text-bioma-leaf transition-colors duration-300">O Ecossistema</a>
+                  <a href="#galeria" className="hover:text-bioma-leaf transition-colors duration-300 hidden md:inline-block">Explorar</a>
+                  <a href="#curadoria" className="hover:text-bioma-leaf transition-colors duration-300 hidden md:inline-block">O Ecossistema</a>
+
+                  <Link
+                    href="/dashboard"
+                    className="px-5 py-2 border border-bioma-moss/50 text-bioma-leaf hover:bg-bioma-moss/20 hover:border-bioma-leaf transition-all duration-300 rounded"
+                  >
+                    Entrar
+                  </Link>
                 </motion.nav>
               </>
             )}

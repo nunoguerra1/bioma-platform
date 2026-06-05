@@ -2,6 +2,7 @@
 
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { useRef } from 'react';
+import Link from 'next/link';
 
 export default function Footer() {
     const footerRef = useRef<HTMLElement>(null);
@@ -24,13 +25,17 @@ export default function Footer() {
                 <span className="text-xs tracking-[0.4em] uppercase text-bioma-leaf font-sans mb-8">
                     Pronto para respirar?
                 </span>
-                <h2 className="font-title text-5xl md:text-8xl font-light text-bioma-water tracking-tight hover:text-bioma-leaf transition-colors duration-700 cursor-pointer">
+
+                <h2 className="font-title text-5xl md:text-8xl font-light text-bioma-water tracking-tight hover:text-bioma-leaf transition-colors duration-700 cursor-default">
                     Inicie seu Ecossistema.
                 </h2>
 
-                <button className="mt-16 px-8 py-4 bg-transparent border border-bioma-moss text-bioma-leaf text-xs uppercase tracking-[0.2em] hover:bg-bioma-moss/30 hover:border-bioma-leaf transition-all duration-500 rounded">
-                    Falar com um Curador
-                </button>
+                <Link
+                    href="/dashboard"
+                    className="mt-16 px-8 py-4 bg-transparent border border-bioma-moss text-bioma-leaf text-xs uppercase tracking-[0.2em] hover:bg-bioma-moss/30 hover:border-bioma-leaf transition-all duration-500 rounded inline-block"
+                >
+                    Acessar Meu Painel
+                </Link>
             </motion.div>
 
             <div className="w-full max-w-7xl flex flex-col md:flex-row justify-between items-center text-[10px] tracking-[0.2em] uppercase text-bioma-water/40 font-sans z-20 px-8">
