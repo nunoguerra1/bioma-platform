@@ -3,14 +3,20 @@
 import { motion, AnimatePresence, useScroll, useVelocity, useSpring, useTransform } from 'framer-motion';
 import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
+import costelaImage from '../../../public/costela-de-adao.jpg'
+import ficusImage from '../../../public/ficus-lyrata.webp'
+import calatheaImage from '../../../public/calathea.jpg'
+import sansevieriaImage from '../../../public/sansevieria.jpg'
+import zamioculcaImage from '../../../public/zamioculca.jpg'
+import pileaImage from '../../../public/pilea-peperomioides.jpg'
 
 const minhasPlantas = [
-    { id: 1, title: "Monstera Deliciosa", status: "Regar Hoje", health: 45, image: "https://images.unsplash.com/photo-1592525413155-22445c55beea?q=80&w=1200&auto=format&fit=crop" },
-    { id: 2, title: "Ficus Lyrata", status: "Saudável", health: 90, image: "https://images.unsplash.com/photo-1614594975525-e45190c55d40?q=80&w=1200&auto=format&fit=crop" },
-    { id: 3, title: "Calathea", status: "Aclimatizar", health: 70, image: "https://images.unsplash.com/photo-1620127807580-55e100ec5a06?q=80&w=1200&auto=format&fit=crop" },
-    { id: 4, title: "Sansevieria", status: "Saudável", health: 98, image: "https://images.unsplash.com/photo-1611078810680-1cd17d699042?q=80&w=1200&auto=format&fit=crop" },
-    { id: 5, title: "Zamioculca", status: "Crescimento", health: 100, image: "https://images.unsplash.com/photo-1632207691143-643e2a9a9361?q=80&w=1200&auto=format&fit=crop" },
-    { id: 6, title: "Pilea Peperomioides", status: "Saudável", health: 85, image: "https://images.unsplash.com/photo-1597054942004-98ce4f526b77?q=80&w=1200&auto=format&fit=crop" },
+    { id: 1, title: "Monstera Deliciosa", status: "Regar Hoje", health: 45, image: costelaImage.src },
+    { id: 2, title: "Ficus Lyrata", status: "Saudável", health: 90, image: ficusImage.src },
+    { id: 3, title: "Calathea", status: "Aclimatizar", health: 70, image: calatheaImage.src },
+    { id: 4, title: "Sansevieria", status: "Saudável", health: 98, image: sansevieriaImage.src },
+    { id: 5, title: "Zamioculca", status: "Crescimento", health: 100, image: zamioculcaImage.src },
+    { id: 6, title: "Pilea Peperomioides", status: "Saudável", health: 85, image: pileaImage.src },
 ];
 
 export default function Dashboard() {

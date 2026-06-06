@@ -2,12 +2,40 @@
 
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { useRef } from 'react';
+import ficusImage from '../../public/ficus-lyrata.webp'
+import jardimImage from '../../public/jardim-vertical.jpg'
+import terrarioImage from '../../public/terrario-fechado.jpg'
+import musgoImage from '../../public/musgo-preservado.jpg'
 
 const obras = [
-    { id: 1, titulo: "Ficus Lyrata", categoria: "Purificação de Ar", imagem: "https://images.unsplash.com/photo-1614594975525-e45190c55d40?q=80&w=800&auto=format&fit=crop" },
-    { id: 2, titulo: "Jardim Vertical", categoria: "Design Biofílico", imagem: "https://images.unsplash.com/photo-1599839619722-39751411ea63?q=80&w=800&auto=format&fit=crop" },
-    { id: 3, titulo: "Terrário Fechado", categoria: "Ecossistema Autossuficiente", imagem: "https://images.unsplash.com/photo-1592150621744-aca64f48394a?q=80&w=800&auto=format&fit=crop" },
-    { id: 4, titulo: "Musgo Preservado", categoria: "Atenuação Acústica", imagem: "https://images.unsplash.com/photo-1629541174601-385ee0712713?q=80&w=800&auto=format&fit=crop" }
+    {
+        id: 1,
+        titulo: "Ficus Lyrata",
+        categoria: "Purificação de Ar",
+        descricao: "Espécime botânica majestosa de folhas largas, ideal para filtrar compostos orgânicos voláteis (VOCs) e regular de forma natural a umidade em ecossistemas internos.",
+        imagem: ficusImage.src
+    },
+    {
+        id: 2,
+        titulo: "Jardim Vertical",
+        categoria: "Design Biofílico",
+        descricao: "Estrutura viva modular desenvolvida para integrar a natureza à arquitetura urbana. Otimiza o conforto térmico, purifica o fluxo de ar e reconecta o espaço à essência natural.",
+        imagem: jardimImage.src
+    },
+    {
+        id: 3,
+        titulo: "Terrário Fechado",
+        categoria: "Ecossistema Autossuficiente",
+        descricao: "Microcosmo biológico isolado que replica os ciclos da água e dos nutrientes de forma autônoma. Uma obra de arte viva que demonstra o equilíbrio perfeito da biosfera em miniatura.",
+        imagem: terrarioImage.src
+    },
+    {
+        id: 4,
+        titulo: "Musgo Preservado",
+        categoria: "Atenuação Acústica",
+        descricao: "Painel botânico estabilizado de alta performance que retém a textura e a cor natural sem necessidade de rega ou luz. Excelente para absorção sonora e conforto acústico.",
+        imagem: musgoImage.src
+    }
 ];
 
 export default function Galeria() {
@@ -34,13 +62,13 @@ export default function Galeria() {
                         >
                             <div className="flex-1 max-w-xl flex flex-col gap-6 pl-0 md:pl-12 z-10">
                                 <span className="text-xs tracking-[0.3em] uppercase text-bioma-leaf font-sans">
-                                    0{index + 2} / {obra.categoria}
+                                    {String(index + 1).padStart(2, '0')} / {obra.categoria}
                                 </span>
                                 <h3 className="font-title text-5xl md:text-7xl font-light text-bioma-water whitespace-nowrap">
                                     {obra.titulo}
                                 </h3>
                                 <p className="font-sans text-bioma-leaf/80 font-light text-xl leading-relaxed mt-4">
-                                    Espécime catalogada e perfeitamente adaptável a ecossistemas internos. Reduz VOCs e aumenta a umidade relativa do ambiente.
+                                    {obra.descricao}
                                 </p>
                             </div>
 
