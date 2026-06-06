@@ -2,6 +2,8 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { PlantasModule } from './infrastructure/http/controllers/plantas/plantas.module';
 import { PlantaPostgresEntity } from './infrastructure/database/entities/planta.postgres-entity';
+import { UsuariosModule } from './infrastructure/http/controllers/usuarios/usuarios.module';
+import { UsuarioPostgresEntity } from './infrastructure/database/entities/usuario.postgres-entity';
 
 @Module({
   imports: [
@@ -12,10 +14,11 @@ import { PlantaPostgresEntity } from './infrastructure/database/entities/planta.
       username: 'bioma_user',
       password: 'bioma_password',
       database: 'bioma_db',
-      entities: [PlantaPostgresEntity],
+      entities: [UsuarioPostgresEntity, PlantaPostgresEntity],
       synchronize: true,
     }),
     PlantasModule,
+    UsuariosModule,
   ],
 })
 export class AppModule { }

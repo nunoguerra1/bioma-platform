@@ -1,4 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, ManyToOne, JoinColumn } from 'typeorm';
+import { UsuarioPostgresEntity } from './usuario.postgres-entity';
 
 @Entity('plantas')
 export class PlantaPostgresEntity {
@@ -17,6 +18,10 @@ export class PlantaPostgresEntity {
 
     @Column({ type: 'text', nullable: true })
     imagem: string;
+
+    @ManyToOne(() => UsuarioPostgresEntity, (usuario) => usuario.plantas, { onDelete: 'CASCADE' })
+    @JoinColumn({ name: 'usuario_id' })
+    usuario: UsuarioPostgresEntity;
 
     @CreateDateColumn({ name: 'created_at' })
     createdAt: Date;
