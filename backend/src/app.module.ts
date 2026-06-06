@@ -4,6 +4,7 @@ import { PlantasModule } from './infrastructure/http/controllers/plantas/plantas
 import { PlantaPostgresEntity } from './infrastructure/database/entities/planta.postgres-entity';
 import { UsuariosModule } from './infrastructure/http/controllers/usuarios/usuarios.module';
 import { UsuarioPostgresEntity } from './infrastructure/database/entities/usuario.postgres-entity';
+import { AuthModule } from './infrastructure/http/controllers/auth/auth.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { UsuarioPostgresEntity } from './infrastructure/database/entities/usuari
     }),
     PlantasModule,
     UsuariosModule,
+    AuthModule,
   ],
 })
 export class AppModule { }

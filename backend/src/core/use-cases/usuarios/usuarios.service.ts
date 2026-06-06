@@ -35,4 +35,8 @@ export class UsuariosService {
       email: usuarioSalvo.email,
     };
   }
+
+  async buscarPorEmail(email: string) {
+    return this.usuarioRepository.findOne({ where: { email } });
+  }
 }
