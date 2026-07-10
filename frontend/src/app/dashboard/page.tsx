@@ -4,7 +4,6 @@ import { motion, AnimatePresence, useScroll, useVelocity, useSpring, useTransfor
 import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 
-// Interface para garantir que o TypeScript entende os dados que vêm do banco
 interface Planta {
     id: string;
     titulo: string;

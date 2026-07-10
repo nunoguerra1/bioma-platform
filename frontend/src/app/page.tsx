@@ -1,7 +1,7 @@
 'use client';
 
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
 import Preloader from '@/components/Preloader';
 import Galeria from '@/components/Galeria';
@@ -75,6 +75,20 @@ function Manifesto() {
 export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
 
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userName, setUserName] = useState('');
+
+  useEffect(() => {
+    const token = localStorage.getItem('@bioma:token');
+    const userString = localStorage.getItem('@bioma:user');
+
+    if (token && userString) {
+      setIsLoggedIn(true);
+      const user = JSON.parse(userString);
+      setUserName(user.nome.split(' ')[0]);
+    }
+  }, []);
+
   const titleWords = "BIOMA".split("");
   const subtitleText = "Arquitetura biofílica e ecossistemas internos curados para espaços urbanos.";
 
@@ -144,12 +158,22 @@ export default function Home() {
                   <a href="#galeria" className="hover:text-bioma-leaf transition-colors duration-300 hidden md:inline-block">Explorar</a>
                   <a href="#curadoria" className="hover:text-bioma-leaf transition-colors duration-300 hidden md:inline-block">O Ecossistema</a>
 
-                  <Link
-                    href="/dashboard"
-                    className="px-5 py-2 border border-bioma-moss/50 text-bioma-leaf hover:bg-bioma-moss/20 hover:border-bioma-leaf transition-all duration-300 rounded"
-                  >
-                    Entrar
-                  </Link>
+                  {isLoggedIn ? (
+                    <Link
+                      href="/dashboard"
+                      className="px-5 py-2 border border-bioma-leaf bg-bioma-leaf text-bioma-dark hover:bg-transparent hover:text-bioma-leaf transition-all duration-300 rounded shadow-[0_0_20px_rgba(163,184,153,0.3)] font-bold"
+                    >
+                      {userName} →
+                    </Link>
+                  ) : (
+                    <Link
+                      href="/auth"
+                      className="px-5 py-2 border border-bioma-moss/50 text-bioma-leaf hover:bg-bioma-moss/20 hover:border-bioma-leaf transition-all duration-300 rounded"
+                    >
+                      Entrar
+                    </Link>
+                  )}
+
                 </motion.nav>
               </>
             )}
